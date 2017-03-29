@@ -1,0 +1,10 @@
+*.pyc
+*.pyo
+test
+_pycache_
+newDataSet
+transposeDataSet
+new_song.mid
+test_data.py
+model.py
+CreateMIDI.py
