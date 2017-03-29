@@ -20,37 +20,6 @@ class MidiMan:
 			for message in track:
 				print(message)
 
-	def make_Format(self):
-		# make format ([(note.type,note)],time)
-		for i, track in enumerate(self.mid.tracks):
-			self.note_format = []
-			note_list = []
-			for message in track:
-				if message.time != 0:
-					if not note_list:
-						pass
-					elif note_list:
-						# print (note_list)
-						self.note_format += [(note_list,message.time)]
-						note_list = []
-					if message.type == 'note_on':
-						note_list += [(message.type, message.note)]
-					elif message.type == 'note_off':
-						note_list += [(message.type, message.note)]
-				elif message.time == 0:
-					if message.type == 'note_on':
-						note_list += [(message.type, message.note)]
-					elif message.type == 'note_off':
-						note_list += [(message.type, message.note)]
-			if len(note_list) != 0:
-				self.note_format += [(note_list,message.time)]
-
-	def get_Note_Format(self):
-		return self.note_format
-
-	def show_Note_Format(self):
-		print (self.note_format)
-
 	def transpose(self):
 		#converting everything into the key of C major or A minor
 
