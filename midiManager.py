@@ -13,6 +13,7 @@ class MidiMan:
 		self.note_format = []
 		self.lowerBound = 24
 		self.upperBound = 102
+		self.cumTime = 0
 
 	def showMidiMessage(self):
 		for i, track in enumerate(self.mid.tracks):
@@ -27,23 +28,26 @@ class MidiMan:
 			note_list = []
 			for message in track:
 				if message.time != 0:
+					self.cumTime += message.time
 					if not note_list:
 						pass
 					elif note_list:
 						# print (note_list)
-						self.note_format += [(note_list,message.time)]
+						self.note_format += [(note_list,self.cumTime-message.time)]
 						note_list = []
 					if message.type == 'note_on':
-						note_list += [(message.type, message.note)]
+						if message.note <= self.upperBound and message.note >= self.lowerBound:
+							note_list += [(message.type, message.note)]
 					elif message.type == 'note_off':
-						note_list += [(message.type, message.note)]
+						if message.note <= self.upperBound and message.note >= self.lowerBound:
+							note_list += [(message.type, message.note)]
 				elif message.time == 0:
 					if message.type == 'note_on':
 						note_list += [(message.type, message.note)]
 					elif message.type == 'note_off':
 						note_list += [(message.type, message.note)]
 			if len(note_list) != 0:
-				self.note_format += [(note_list,message.time)]
+				self.note_format += [(note_list, self.cumTime)]
 
 	def get_Note_Format(self):
 		return self.note_format
