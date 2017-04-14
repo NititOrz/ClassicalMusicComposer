@@ -31,17 +31,18 @@ class Model(object):
 	def init_data(self):
 		self.X = np.array([[0]*(upperBound-lowerBound)]*16)
 		self.y = [[0]*(upperBound-lowerBound)]
-		return self.y
+		return self.X, self.y
 
-	def make_data(self):
+	def make_data(self, Y):
 		self.X = np.reshape(self.X, (16,1,78))
-		self.y = np.reshape(self.y, (1,1,78))
-		# print (self.X, self.y)
+		self.y = np.reshape(Y, (1,1,78))
+		# print (len(self.X), len(self.y))
 		# for x in self.X:
-		# 	print (x)
+		# 	print ("X: " ,x)
+		# 	print ("Y: " ,self.y)
 
 	def slide_window(self):
-		self.X = np.append(self.X,self.y,axis=0)
+		self.X = np.append(self.X, self.y, axis=0)
 		self.X = np.delete(self.X,0,0)
 
 	def create_model(self):
@@ -52,7 +53,7 @@ class Model(object):
 	def fit_model(self):
 		for i in range(0, 16):
 			x = np.reshape(self.X[i], (1,1,78))
-			# print(x)
+			print(x)
 			# print("Cycle: {}/{}".format(i+1, self.cycle))
 			self.model.fit(x, self.y, nb_epoch=self.epoch, batch_size=self.batch_size, verbose=2, shuffle=False)
 		self.model.reset_states()

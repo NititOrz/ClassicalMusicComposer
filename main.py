@@ -34,20 +34,20 @@ def run(file, model):
 	# m.show_Note_Format()
 	# m.showMidiMessage()
 
-	Y = mo.init_data()
+	X,Y = mo.init_data()
 	countNote = 0
 	for time in range(0, cumTime+1):
 		# make note matrix
-		print ("<<<<<<<<<<<<<<<<<  {}  >>>>>>>>>>>>>>>>>".format(time))
+		print ("-----------------Time: {}/{}----------------".format(time, cumTime))
 		if time == note_format[countNote][1]:
-			# print ("********************* Change *****************")
+			print ("********************* Change *****************")
 			BS = BuildNoteSheet(note_format[countNote][0], Y)
 			countNote += 1
 
 		Y = BS.buildNoteMatrix()
 
 		# # make model
-		mo.make_data()
+		mo.make_data(Y)
 		mo.fit_model()
 		mo.slide_window()
 

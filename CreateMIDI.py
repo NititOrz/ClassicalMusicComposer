@@ -3,20 +3,20 @@ from mido import Message, MidiFile, MidiTrack, MetaMessage
 mid = MidiFile()
 track = MidiTrack()
 mid.tracks.append(track)
-track.append(Message('note_on', channel=0, note=60, velocity=61, time=1024))
-track.append(Message('note_on', channel=0, note=64, velocity=57, time=256))
-track.append(Message('note_on', channel=0, note=67, velocity=56, time=256))
-track.append(Message('note_off', channel=0, note=67, velocity=0, time=256))
+track.append(Message('note_on', channel=0, note=60, velocity=61, time=24))
+track.append(Message('note_on', channel=0, note=64, velocity=57, time=23))
+track.append(Message('note_on', channel=0, note=67, velocity=56, time=26))
+track.append(Message('note_off', channel=0, note=67, velocity=0, time=36))
 track.append(Message('note_on', channel=0, note=72, velocity=60, time=0))
-track.append(Message('note_off', channel=0, note=72, velocity=0, time=256))
+track.append(Message('note_off', channel=0, note=72, velocity=0, time=23))
 track.append(Message('note_on', channel=0, note=76, velocity=63, time=0))
-track.append(Message('note_off', channel=0, note=76, velocity=0, time=256))
+track.append(Message('note_off', channel=0, note=76, velocity=0, time=23))
 track.append(Message('note_on', channel=0, note=67, velocity=50, time=0))
-track.append(Message('note_off', channel=0, note=67, velocity=0, time=256))
+track.append(Message('note_off', channel=0, note=67, velocity=0, time=23))
 track.append(Message('note_on', channel=0, note=72, velocity=47, time=0))
-track.append(Message('note_off', channel=0, note=72, velocity=0, time=256))
+track.append(Message('note_off', channel=0, note=72, velocity=0, time=23))
 track.append(Message('note_on', channel=0, note=76, velocity=47, time=0))
-track.append(Message('note_off', channel=0, note=60, velocity=0, time=256))
+track.append(Message('note_off', channel=0, note=60, velocity=0, time=23))
 track.append(Message('note_off', channel=0, note=64, velocity=0, time=0))
 track.append(Message('note_off', channel=0, note=76, velocity=0, time=0))
 track.append(Message('note_on', channel=0, note=60, velocity=62, time=0))
@@ -77,3 +77,12 @@ track.append(Message('note_on', channel=0, note=60, velocity=62, time=0))
 
 
 mid.save('new_song.mid')
+
+# note_on channel=0 note=48 velocity=47 time=768
+# note_on channel=0 note=72 velocity=57 time=256
+# note_off channel=0 note=48 velocity=0 time=85
+# note_off channel=0 note=72 velocity=0 time=171
+# note_on channel=0 note=74 velocity=57 time=0
+# note_off channel=0 note=74 velocity=0 time=256
+# note_on channel=0 note=76 velocity=57 time=0
+# note_off channel=0 note=76 velocity=0 time=256
