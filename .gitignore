@@ -2,8 +2,9 @@
 *.pyo
 test
 _pycache_
+DataSet
 newDataSet
 transposeDataSet
 new_song.mid
-test_data.py
-model.py
+
+
