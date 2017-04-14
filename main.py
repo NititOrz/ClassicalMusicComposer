@@ -9,8 +9,8 @@ import glob
 # transpose mode 3
 def file_mode(mode, model):
 	if mode == "1":
-		# file = './transposeDataSet/bach/C_bach_850_format0.mid'
-		file = './new_song.mid'
+		file = './transposeDataSet/bach/C_bach_850_format0.mid'
+		# file = './new_song.mid'
 		run(file, model)
 
 	elif mode == "2":
@@ -34,7 +34,7 @@ def run(file, model):
 	# m.show_Note_Format()
 	# m.showMidiMessage()
 
-	X,Y = mo.init_data()
+	Y = mo.init_data()
 	countNote = 0
 	for time in range(0, cumTime+1):
 		# make note matrix

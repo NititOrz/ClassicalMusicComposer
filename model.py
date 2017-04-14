@@ -31,7 +31,7 @@ class Model(object):
 	def init_data(self):
 		self.X = np.array([[0]*(upperBound-lowerBound)]*16)
 		self.y = [[0]*(upperBound-lowerBound)]
-		return self.X, self.y
+		return self.y
 
 	def make_data(self, Y):
 		self.X = np.reshape(self.X, (16,1,78))
@@ -53,7 +53,7 @@ class Model(object):
 	def fit_model(self):
 		for i in range(0, 16):
 			x = np.reshape(self.X[i], (1,1,78))
-			print(x)
+			# print(x)
 			# print("Cycle: {}/{}".format(i+1, self.cycle))
 			self.model.fit(x, self.y, nb_epoch=self.epoch, batch_size=self.batch_size, verbose=2, shuffle=False)
 		self.model.reset_states()
