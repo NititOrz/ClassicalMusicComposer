@@ -4,69 +4,49 @@ import h5py
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import LSTM
+from keras.layers import Dropout
 from keras.utils import np_utils
+from keras.models import model_from_json
+from keras.callbacks import ModelCheckpoint
 # fix random seed for reproducibility
-
-lowerBound = 24
-upperBound = 102
-np.random.seed(7)
 
 class Model(object):
 	"""docstring for Model"""
 	def __init__(self):
-		super(Model, self).__init__()
-		# self.note_sheet = note_sheet
-		self.seq_length = 1
-		self.X = []
-		self.y = []
-		self.batch_size = 1
-		self.epoch = 1
-		# self.cycle = 1
 		self.model = Sequential()
-		# self.loss = 'mean_squared_error'
-		self.loss = 'binary_crossentropy'
-		# self.loss = 'categorical_crossentropy'
-		# self.loss = 'mean_absolute_error'
-		
-	def init_data(self):
-		self.X = np.array([[0]*(upperBound-lowerBound)]*16)
-		self.y = [[0]*(upperBound-lowerBound)]
-		return self.y
+		self.batch_size = 256
+	
+	def createModel(self, X, y):	
+		print("Creating Model.....")
+		# self.batch_size = X.shape[0]
+		self.model.add(LSTM(128, input_shape=(X.shape[1], X.shape[2])))
+		# self.model.add(LSTM(64, input_shape=(X.shape[1], X.shape[2])))
+		self.model.add(Dense(y.shape[1], activation='softmax'))
+		# self.model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+		print("Done!")
 
-	def make_data(self, Y):
-		self.X = np.reshape(self.X, (16,1,78))
-		self.y = np.reshape(Y, (1,1,78))
-		# print (len(self.X), len(self.y))
-		# for x in self.X:
-		# 	print ("X: " ,x)
-		# 	print ("Y: " ,self.y)
+	def compileModel(self):
+		print("Compiling Model.....")
+		self.model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+		print("Done!!")
 
-	def slide_window(self):
-		self.X = np.append(self.X, self.y, axis=0)
-		self.X = np.delete(self.X,0,0)
+	def trainModel(self, X, y):
+		print("Training Model.....")
+		filepath="./model/weights-improvement-{epoch:03d}-{loss:.4f}.hdf5"
+		checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=0, save_best_only=True, mode='min')
+		callbacks_list = [checkpoint]
+		self.model.fit(X, y, epochs=1, batch_size=self.batch_size, verbose=1, callbacks = callbacks_list)
+		print("Done!!!")
 
-	def create_model(self):
-		self.model.add(LSTM(78, batch_input_shape=(self.batch_size, 1, 78), stateful=True, return_sequences = True))
-		self.model.add(LSTM(78, activation='softmax', return_sequences = True))
-		self.model.compile(loss=self.loss, optimizer='adam', metrics=['accuracy'])
-
-	def fit_model(self):
-		for i in range(0, 16):
-			x = np.reshape(self.X[i], (1,1,78))
-			# print(x)
-			# print("Cycle: {}/{}".format(i+1, self.cycle))
-			self.model.fit(x, self.y, nb_epoch=self.epoch, batch_size=self.batch_size, verbose=2, shuffle=False)
-		self.model.reset_states()
-
-	def summarize(self):
-		# TODO make test data to X self.X should be (1,1,78)
-		scores = self.model.evaluate(self.X, self.y, batch_size=self.batch_size, verbose=0)
-		self.model.reset_states()
+	def testModel(self, X, y):
+		# summarize performance of the 
+		print("Testing Model.....")
+		scores = self.model.evaluate(X, y, verbose=0)
 		print("Model Accuracy: %.2f%%" % (scores[1]*100))
-		return self.model
 
 	def save_model(self):
 		# serialize model to JSON
+		print("Saving Model.....")
 		model_json = self.model.to_json()
 		with open("./model/model.json", "w") as json_file:
 		    json_file.write(model_json)
@@ -74,12 +54,18 @@ class Model(object):
 		self.model.save_weights("./model/model.h5")
 		print("Saved model to disk")
 
-	def load_model(self):
+	def load_model(self, model, weights):
 		# load json and create model
-		json_file = open('./model/model.json', 'r')
+		print("Loading Model.....")
+		json_file = open(model, 'r')
 		loaded_model_json = json_file.read()
-		json_file.close()
+		# print(loaded_model_json)
 		loaded_model = model_from_json(loaded_model_json)
+		json_file.close()
 		# load weights into new model
-		loaded_model.load_weights("./model/model.h5")
+		loaded_model.load_weights(weights)
 		print("Loaded model from disk")
+		self.model = loaded_model
+
+	def get_model(self):
+		return self.model
