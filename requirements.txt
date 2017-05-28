@@ -1,0 +1,5 @@
+keras
+mido
+music21
+h5py
+numpy
